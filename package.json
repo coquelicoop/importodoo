@@ -1,0 +1,10 @@
+{
+    "name": "importodoo",
+    "version": "0.0.1",
+    "description": "Importation du catalogue des produits Odoo en ligne de commande",
+    "productName": "importOdoo",
+    "dependencies": {
+        "jayson": "^1.2.1",
+        "csv-writer": "^1.6.0"
+    }
+}
