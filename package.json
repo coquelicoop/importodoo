@@ -1,6 +1,6 @@
 {
     "name": "importodoo",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Importation du catalogue des produits Odoo en ligne de commande",
     "productName": "importOdoo",
     "dependencies": {

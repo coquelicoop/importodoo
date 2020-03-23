@@ -28,6 +28,16 @@ const minCB = config.minCB
 const maxCB = config.maxCB
 const map = config.map || { 'id': 'id', 'image': 'image', 'name': 'nom', 'barcode': 'code-barre', 'list_price': 'prix', 'categ_id': 'categorie', 'uom_id': 'unite' }
 
+/*
+Categories d'articles acceptées. Remplacées par celle indiquée dans la map. Si non trouvée:
+- ignorées si 'défaut':''
+- remplacée si 'défaut': 'autre catégorie'
+*/
+const categories = config.categories || { 'défaut': 'A' }
+function transcodeCategorie (c) {
+    return categories[c] || categories['défaut']
+}
+
 /* Liste des propriétés de product.product à récupérer */
 const fields = []
 for (let f in map) { fields.push(f) }
@@ -76,9 +86,12 @@ function getArticles () {
                             Les champs uom_id (unite) et categ_id (categorie) sont à traiter : le code figure après la virgule
                             */
                             a.unite = codeDeId(a.unite)
-                            a.categorie = codeDeId(a.categorie)
-                            res.push(a)
-                        }
+                            let c = transcodeCategorie(codeDeId(a.categorie))
+                            if (c) {
+                                 a.categorie = c
+                                 res.push(a)
+                             }
+                         }
                         resolve(res)
                     }
                 })
