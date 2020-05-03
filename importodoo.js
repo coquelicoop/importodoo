@@ -43,7 +43,7 @@ const fields = []
 for (let f in map) { fields.push(f) }
 
 /* Curieux nom : c'est la condition de filtre des produits pour l'API */
-const domain = [['barcode', '>=', minCB], ['barcode', '<=', maxCB]]
+const domain = [['barcode', '>=', minCB], ['barcode', '<=', maxCB], ['sale_ok', '=', true]]
 
 const odoo = new Odoo({
     host: config.host,
@@ -68,7 +68,7 @@ function getArticles () {
                 const params = { // paramètres requis pour le search_read
                     ids: [],
                     domain: domain,
-                    fields: fields,
+                    fields: fields, // omettre cette ligne pour avoir TOUS les champs
                     order: '',
                     limit: 9999,
                     offset: 0
@@ -79,6 +79,7 @@ function getArticles () {
                     } else {
                         const res = []
                         for (let i = 0, r = null; (r = products[i]); i++) {
+                            // console.log(JSON.stringify(r))
                             const a = {}
                             // mapping entre les champs reçus et les noms des colonnes (propriété de l'article)
                             for (let f in map) { a[map[f]] = '' + r[f] }
