@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=importOdoo
+Type=Application
+Exec=/home/coquelicoop/balance/importOdoo.sh
+Terminal=true
+Icon=/home/coquelicoop/balance/importOdoo/odoo.png
+NoDisplay=false
+Categories=Utility;
