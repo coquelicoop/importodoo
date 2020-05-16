@@ -1,19 +1,19 @@
 'use strict';
 
 var assert = require('assert');
-
-var http = require('http');
 var jayson = require('jayson');
+var http = null;
 
 var Odoo = function (config) {
   config = config || {};
-
+  this.https = config.https || false; // Ajouté par coquelicoop
   this.host = config.host;
-  this.port = config.port || 80;
+  this.port = config.port || (this.https ? 443 : 80);
   this.database = config.database;
   this.username = config.username;
   this.password = config.password;
   this.timeout = config.timeout || 5000; // Ajouté par coquelicoop
+  http = this.https ? require('https') : require('http'); // Ajouté par coquelicoop
 };
 
 // Connect
@@ -58,7 +58,15 @@ Odoo.prototype.connect = function (cb) {
       }
 
       self.uid = response.result.uid;
-      self.sid = res.headers['set-cookie'][0].split(';')[0];
+      var cks = res.headers['set-cookie'];
+
+      // Ajouté par coquelicoop
+      self.sid = '';
+      for (var i = 0, ck = null; ck = cks[i]; i++) {
+        if (ck.startsWith('session_id'))
+          self.sid = ck.split(';')[0];
+      }
+
       self.session_id = response.result.session_id;
       self.context = response.result.user_context;
 
@@ -208,7 +216,7 @@ Odoo.prototype._request = function (path, params, callback) {
     }
   };
 
-  var client = jayson.client.http(options);
+  var client = this.https ? jayson.client.https(options) : jayson.client.http(options); // Ajouté par coquelicoop
 
   client.request('call', params, function (e, err, res) {
     if (e || err) {
